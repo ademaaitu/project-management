@@ -22,6 +22,41 @@ const CreateProjectDialog = ({ isDialogOpen, setIsDialogOpen }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setIsSubmitting(true);
+        try {
+            const response = await fetch('/api/projects', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    ...formData,
+                    workspaceId: currentWorkspace.id,
+                }),
+            });
+            const data = await response.json();
+            if (response.ok) {
+                // Reset form and close dialog
+                setFormData({
+                    name: "",
+                    description: "",
+                    status: "PLANNING",
+                    priority: "MEDIUM",
+                    start_date: "",
+                    end_date: "",
+                    team_members: [],
+                    team_lead: "",
+                    progress: 0,
+                });
+                setIsDialogOpen(false);
+            } else {
+                console.error("Error creating project:", data.message);
+            }
+        } catch (error) {
+            console.error("Error creating project:", error);
+        } finally {
+            setIsSubmitting(false);
+        }
         
     };
 
