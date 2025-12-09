@@ -58,7 +58,7 @@ export const createProject = async (req, res) =>{
             where: {id: project.id},
             include:{
                 members: {include: {user: true}},
-                taska: {include: {assignee: true, comments: {include: {user: true}}}},
+                tasks: {include: {assignee: true, comments: {include: {user: true}}}},
                 owner: true
             }
         })
@@ -71,10 +71,10 @@ export const createProject = async (req, res) =>{
     }
 }
 // Update project
-export const updateProject = async (params) =>{
+export const updateProject = async (req, res) =>{
     try {
         const {userId} = await req.auth();
-        const {id, workspaceId, description, name, status, progress, priority} = req.body;
+        const {id, workspaceId, description, name, status, progress, priority, start_date, end_date} = req.body;
          // check if user has admin role for workspace
         const workspace = await prisma.workspace.findUnique({
             where: {id: workspaceId},

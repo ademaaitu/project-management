@@ -30,7 +30,8 @@ export const createTask = async(req, res) =>{
                 priority,
                 assigneeId,
                 status,
-                due_daet: new Date(due_date)
+                type,
+                due_date: new Date(due_date)
             }
         })
         const taskWithAssignee = await prisma.task.findUnique({
